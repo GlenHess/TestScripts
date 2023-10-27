@@ -10,6 +10,8 @@
 #      PostAction = {shutdown -r -t 5}
 #   }
 
+Add-Type -AssemblyName System.Web
+
 if (-not (Get-Variable -name Bootstrap_Params -ErrorAction Ignore))
 {
   Write-Error "Required Variable missing: 'Bootstrap_Params'"
