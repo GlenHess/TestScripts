@@ -41,7 +41,7 @@ Function Get-GitHubContents()
     <#
         This function returns the raw content from github
     #>
-    Add-Type -AssemblyName System.Web
+    
     Invoke-RestMethod `
         -Method Get `
         -URI ([System.Web.HttpUtility]::UrlPathEncode("https://raw.githubusercontent.com/${Account}/${Repo}/main/${ScriptPath}")) `
