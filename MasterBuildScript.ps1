@@ -32,7 +32,7 @@ $Scripts_List = Get-GitHubContents $Account $Repo "Scripts.json"
 
 try {
    # Execute scripts in order
-   $Bootstrap_Params.Scripts.Keys | Sort | %{
+   $Bootstrap_Params.Scripts.Keys | Sort-Object | Foreach-Object {
        $ScriptName = $Bootstrap_Params.Scripts."$PSItem"
        $ScriptItem = $Scripts_List | Where-Object {$PSItem.Name -eq $ScriptName}
        if ($null -ne $ScriptItem)
@@ -51,6 +51,6 @@ try {
    Invoke-Command -ScriptBlock $Bootstrap_Params.PostAction -NoNewScope
 } catch {
    $ErrorMessage = "[Script failure]: " | Out-String
-   $_ | Foreach-Object {$ErrorMessage += "$($_.Exception.Message); " | Out-String}
+   $PSItem | Foreach-Object {$ErrorMessage += "$($PSItem.Exception.Message); " | Out-String}
    throw($ErrorMessage)
 }
