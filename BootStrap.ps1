@@ -12,7 +12,7 @@ $Bootstrap_Params = @{
 }
 
 # Wait for Internet Connection
-$MaxRetries = 10
+$MaxRetries = 20
 $Retry = 0
 while (
     -not (Test-Connection 'raw.githubusercontent.com' -count 1 -Quiet) -and
@@ -21,7 +21,7 @@ while (
 
 If (-not (Test-Connection 'raw.githubusercontent.com' -count 1 -Quiet))
 {
-    throw('No connection available in 30 seconds.')
+    throw('No connection available in 60 seconds.')
 }
 
 $Content = Invoke-RestMethod `
