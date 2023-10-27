@@ -25,6 +25,9 @@ $content = Invoke-RestMethod `
               -UseBasicParsing
 Invoke-Command -ScriptBlock $([scriptblock]::Create($content)) -NoNewScope
 
+# Get Script list
+$Scripts_List = Get-GitHubContents "GlenHess" "TestScripts" "Scripts.json"
+
 try {
 
 } catch {$_ | Out-String}
