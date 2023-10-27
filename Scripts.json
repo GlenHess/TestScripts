@@ -2,5 +2,9 @@
     {
         "Name" : "Localization",
         "Path" : "Localization/Set-Localization.ps1"
+    },
+    {
+        "Name" : "TimeSync",
+        "Path" : "TimeSync/Set-TimeSync.ps1"
     }
 ]
