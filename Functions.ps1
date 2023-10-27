@@ -31,7 +31,7 @@ Function Get-GeoId($Name='*')
     }
 }
 
-Function ContentParameters()
+Function Get-GitHubContents()
 {
     Param(
         [Parameter(Position=0)]$Account,
