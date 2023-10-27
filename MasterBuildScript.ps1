@@ -50,6 +50,7 @@ try {
    # Execute Post Action
    Invoke-Command -ScriptBlock $Bootstrap_Params.PostAction -NoNewScope
 } catch {
-   $_ | Out-String
-   #throw "Script failure"
+   $ErrorMessage = "[Script failure]: " | Out-String
+   $_ | Foreach-Object {$ErrorMessage += "$($_.Exception.Message); " | Out-String}
+   throw($ErrorMessage)
 }
