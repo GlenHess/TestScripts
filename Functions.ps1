@@ -5,6 +5,9 @@
 
 Function RunElevated($ScriptBLock)
 {
+    <#
+        This function attempts to create an elevated process to execute the provided script block.
+    #>
     $newProcess = new-object System.Diagnostics.ProcessStartInfo "PowerShell"
     $newProcess.Arguments = $ScriptBlock
     $newProcess.Verb = "runas"
@@ -26,4 +29,21 @@ Function Get-GeoId($Name='*')
        }
        catch {}
     }
+}
+
+Function ContentParameters()
+{
+    Param(
+        [Parameter(Position=0)]$Account,
+        [Parameter(Position=1)]$Repo,
+        [Parameter(Position=2)]$ScriptPath
+    )
+    <#
+        This function returns the raw content from github
+    #>
+    Add-Type -AssemblyName System.Web
+    Invoke-RestMethod `
+        -Method Get `
+        -URI ([System.Web.HttpUtility]::UrlPathEncode("https://raw.githubusercontent.com/${Account}/${Repo}/main/${ScriptPath}")) `
+        -UseBasicParsing    
 }
