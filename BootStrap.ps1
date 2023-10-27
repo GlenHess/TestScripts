@@ -17,11 +17,11 @@ $Retry = 0
 while (
     -not (Test-Connection 'raw.githubusercontent.com' -count 1 -Quiet) -and
     $Retry++ -lt $MaxRetries
-) {Start-Sleep -Seconds 2}
+) {Start-Sleep -Seconds 3}
 
 If (-not (Test-Connection 'raw.githubusercontent.com' -count 1 -Quiet))
 {
-    throw('No connection available in 20 seconds.')
+    throw('No connection available in 30 seconds.')
 }
 
 $Content = Invoke-RestMethod `
