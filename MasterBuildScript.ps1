@@ -18,8 +18,8 @@ if (-not (Get-Variable -name Bootstrap_Params -ErrorAction Ignore))
 }
 
 # Import functions
-$Account = 'GlenHess'
-$Repo = 'TestScripts'
+#$Account = 'GlenHess'
+#$Repo = 'TestScripts'
 $ScriptPath = 'Functions.ps1'
 $content = Invoke-RestMethod `
               -Method Get `
