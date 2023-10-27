@@ -16,7 +16,7 @@ $MaxRetries = 10
 $Retry = 0
 while (
     -not (Test-Connection 'raw.githubusercontent.com' -count 1 -Quiet) -and
-    $Retry -lt $MaxRetries
+    $Retry++ -lt $MaxRetries
 ) {Start-Sleep -Seconds 2}
 
 If (-not (Test-Connection 'raw.githubusercontent.com' -count 1 -Quiet))
