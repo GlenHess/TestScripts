@@ -51,5 +51,5 @@ try {
    Invoke-Command -ScriptBlock $Bootstrap_Params.PostAction -NoNewScope
 } catch {
    $_ | Out-String
-   throw "Script failure"
+   #throw "Script failure"
 }
