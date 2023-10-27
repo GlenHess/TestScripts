@@ -1,6 +1,10 @@
 <#
     This script is to correct the time sync in a Virtual Machine.
 #>
+
+# Functions used:
+#   RunElevated
+
 RunElevated({
 sc.exe triggerinfo w32time delete
 sc.exe config w32time start=auto
