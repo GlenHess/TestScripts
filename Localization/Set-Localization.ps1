@@ -59,6 +59,7 @@ if($SetLanguage -ne $currentLanguage)
                 Disable-ScheduledTask -TaskName "Localization" | Out-Null
             }
             # Reboot required
+            $Reboot = $true
         }
     }
 } 
