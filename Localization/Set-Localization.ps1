@@ -43,7 +43,11 @@ if($LanguageRegionCode -ne $currentLanguage)
             Set-WinHomeLocation $(Get-GeoId($LanguageRegionCode))
             
             # Find all matching major language inputs
-            $LanguageInput = $($LanguageRegionCode; $languagePacks | Where-Object {$PSItem -match ($LanguageRegionCode.Split('-')[0])})
+            $LanguageInput = $(
+                $LanguageRegionCode # Set Lab langauge as default
+                $languagePacks | Where-Object {$PSItem -match ($LanguageRegionCode.Split('-')[0])} # Add other regions in matching language
+                "en-US" # Add English as a fall back
+            )
             Set-WinUserLanguageList $LanguageInput -force
             RunElevated({New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft" -Name "Edge" -Force})
             RunElevated({New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Edge" -Name "SpellcheckLanguage" -Force})
