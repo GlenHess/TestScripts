@@ -43,7 +43,7 @@ if($LanguageRegionCode -ne $currentLanguage)
             Set-WinHomeLocation $(Get-GeoId($LanguageRegionCode))
             
             # Find all matching major language inputs
-            $LanguageInput = $languagePacks | Where-Object {$PSItem -match ($LanguageRegionCode.Split('-')[0])}
+            $LanguageInput = $($LanguageRegionCode; $languagePacks | Where-Object {$PSItem -match ($LanguageRegionCode.Split('-')[0])})
             Set-WinUserLanguageList $LanguageInput -force
             RunElevated({New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft" -Name "Edge" -Force})
             RunElevated({New-Item -Path "HKLM:\SOFTWARE\Policies\Microsoft\Edge" -Name "SpellcheckLanguage" -Force})
