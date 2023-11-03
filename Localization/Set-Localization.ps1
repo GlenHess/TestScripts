@@ -39,6 +39,12 @@ if($LanguageRegionCode -ne $currentLanguage)
         Else
         {
             # Language installed, set it.
+            if ($LanguageRegionCode -eq 'ja-JP') {
+                $registryPath = "HKLM:\SYSTEM\CurrentControlSet\Services\i8042prt\Parameters"
+                Set-ItemProperty -Path $registryPath -Name 'LayerDriver JPN' -Value 'kbd106.dll' -Type String
+                Set-ItemProperty -Path $registryPath -Name 'OverrideKeyboardIdentifier' -Value 'PCAT_106KEY' -Type String
+                Set-ItemProperty -Path $registryPath -Name 'OverrideKeyboardSubtype' -Value 0x00000002 -Type DWord
+            }
             Set-Culture $LanguageRegionCode
             Set-WinSystemLocale $LanguageRegionCode
             Set-WinHomeLocation $(Get-GeoId($LanguageRegionCode))
