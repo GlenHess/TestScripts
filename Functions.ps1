@@ -42,8 +42,14 @@ Function Get-GitHubContents()
         This function returns the raw content from github
     #>
     
-    Invoke-RestMethod `
+    $enc.GetString([Convert]::FromBase64String((Invoke-RestMethod `
         -Method Get `
-        -URI ([System.Web.HttpUtility]::UrlPathEncode("https://raw.githubusercontent.com/${Account}/${Repo}/main/${ScriptPath}")) `
-        -UseBasicParsing    
+        -URI [System.Web.HttpUtility]::UrlPathEncode("https://api.github.com/repos/${Account}/${repo}/contents/${ScriptPath}") `
+        -UseBasicParsing `
+        -Header @{
+            Accept = "application/vnd.github+json"
+            Authorization = "Bearer ${GitHubAuthToken}"
+            "X-GitHub-Api-Version" = "2022-11-28"
+        }
+    ))
 }
