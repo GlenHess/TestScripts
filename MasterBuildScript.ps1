@@ -21,14 +21,20 @@ if (-not (Get-Variable -name Bootstrap_Params -ErrorAction Ignore))
 #$Account = 'GlenHess'
 #$Repo = 'TestScripts'
 $ScriptPath = 'Functions.ps1'
+
+<# Public Repo
 $content = Invoke-RestMethod `
               -Method Get `
               -URI ([System.Web.HttpUtility]::UrlPathEncode("https://raw.githubusercontent.com/${Account}/${Repo}/main/${ScriptPath}")) `
               -UseBasicParsing
+#>
+$parameters = &$Content_Parameters $Account $Repo $ScriptPath
+$Content = [scriptblock]::Create(($enc.GetString([Convert]::FromBase64String((Invoke-RestMethod @parameters).content))))
+
 Invoke-Command -ScriptBlock $([scriptblock]::Create($content)) -NoNewScope
 
 # Get Script list
-$Scripts_List = Get-GitHubContents $Account $Repo "Scripts.json"
+# $Scripts_List = Get-GitHubContents $Account $Repo "Scripts.json"
 
 try {
    # Execute scripts in order
