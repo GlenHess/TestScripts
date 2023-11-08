@@ -25,35 +25,54 @@ If (-not (Test-Connection 'raw.githubusercontent.com' -count 1 -Quiet))
     throw('No connection available in 60 seconds.')
 }
 
-[System.Text.Encoding] $enc = [System.Text.Encoding]::UTF8
+$Base64 = "
+DQogICAgW0NtZGxldEJpbmRpbmcoRGVmYXVsdFBhcmFtZXRlclNldE5hbWUgPSAnUHVibGljJyldDQog
+ICAgUGFyYW0gKA0KICAgICAgICBbUGFyYW1ldGVyKE1hbmRhdG9yeSwgUGFyYW1ldGVyU2V0TmFtZSA9
+ICdQdWJsaWMnLCBQb3NpdGlvbiA9IDApXQ0KICAgICAgICBbUGFyYW1ldGVyKE1hbmRhdG9yeSwgUGFy
+YW1ldGVyU2V0TmFtZSA9ICdQcml2YXRlJywgUG9zaXRpb24gPSAwKV0NCiAgICAgICAgW3N0cmluZ10k
+QWNjb3VudCwNCg0KICAgICAgICBbUGFyYW1ldGVyKE1hbmRhdG9yeSwgUGFyYW1ldGVyU2V0TmFtZSA9
+ICdQdWJsaWMnLCBQb3NpdGlvbiA9IDEpXQ0KICAgICAgICBbUGFyYW1ldGVyKE1hbmRhdG9yeSwgUGFy
+YW1ldGVyU2V0TmFtZSA9ICdQcml2YXRlJywgUG9zaXRpb24gPSAxKV0NCiAgICAgICAgW3N0cmluZ10k
+UmVwbywNCg0KICAgICAgICBbUGFyYW1ldGVyKE1hbmRhdG9yeSwgUGFyYW1ldGVyU2V0TmFtZSA9ICdQ
+dWJsaWMnLCBQb3NpdGlvbiA9IDIpXQ0KICAgICAgICBbUGFyYW1ldGVyKE1hbmRhdG9yeSwgUGFyYW1l
+dGVyU2V0TmFtZSA9ICdQcml2YXRlJywgUG9zaXRpb24gPSAyKV0NCiAgICAgICAgW3N0cmluZ10kRmls
+ZVBhdGgsDQoNCiAgICAgICAgW1BhcmFtZXRlcihNYW5kYXRvcnksIFBhcmFtZXRlclNldE5hbWUgPSAn
+UHJpdmF0ZScsIFBvc2l0aW9uID0gMyldDQogICAgICAgIFtzdHJpbmddJEF1dGhUb2tlbg0KICAgICkN
+CiAgICBJZiAoLW5vdCAkQXV0aFRva2VuKSB7DQogICAgICAgIFdyaXRlLVZlcmJvc2UgIlBhcmFtZXRl
+ciBTZXQ6IFB1YmxpYyINCiAgICAgICAgJFB1YmxpYyA9ICR0cnVlDQogICAgfQ0KICAgIGVsc2UNCiAg
+ICB7DQogICAgICAgIFdyaXRlLVZlcmJvc2UgIlBhcmFtZXRlciBTZXQ6IFByaXZhdGUiDQogICAgfQ0K
+ICAgIEFkZC1UeXBlIC1Bc3NlbWJseU5hbWUgU3lzdGVtLldlYg0KICAgICRSZXN0TWV0aG9kX1BhcmFt
+ZXRlcnMgPSBAe30NCiAgICAkUmVzdE1ldGhvZF9QYXJhbWV0ZXJzLkFkZCgnTWV0aG9kJywnR2V0JykN
+CiAgICAkUmVzdE1ldGhvZF9QYXJhbWV0ZXJzLkFkZCgnVXNlQmFzaWNQYXJzaW5nJywkdHJ1ZSkNCiAg
+ICBJZiAoJFB1YmxpYykNCiAgICB7DQogICAgICAgICRSZXN0TWV0aG9kX1BhcmFtZXRlcnMuQWRkKA0K
+ICAgICAgICAgICAgJ1VSSScsDQogICAgICAgICAgICBbU3lzdGVtLldlYi5IdHRwVXRpbGl0eV06OlVy
+bFBhdGhFbmNvZGUoImh0dHBzOi8vcmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbS8ke0FjY291bnR9LyR7
+UmVwb30vbWFpbi8ke0ZpbGVQYXRofSIpDQogICAgICAgICkNCiAgICB9DQogICAgRWxzZSAjIFByaXZh
+dGUNCiAgICB7DQogICAgICAgICRSZXN0TWV0aG9kX1BhcmFtZXRlcnMuQWRkKA0KICAgICAgICAgICAg
+J1VSSScsDQogICAgICAgICAgICBbU3lzdGVtLldlYi5IdHRwVXRpbGl0eV06OlVybFBhdGhFbmNvZGUo
+Imh0dHBzOi8vYXBpLmdpdGh1Yi5jb20vcmVwb3MvJHtBY2NvdW50fS8ke1JlcG99L2NvbnRlbnRzLyR7
+RmlsZVBhdGh9IikNCiAgICAgICAgKQ0KICAgICAgICAkUmVzdE1ldGhvZF9QYXJhbWV0ZXJzLkFkZCgN
+CiAgICAgICAgICAgICdIZWFkZXInLA0KICAgICAgICAgICAgQHsNCiAgICAgICAgICAgICAgICBBY2Nl
+cHQgPSAiYXBwbGljYXRpb24vdm5kLmdpdGh1Yitqc29uIg0KICAgICAgICAgICAgICAgIEF1dGhvcml6
+YXRpb24gPSAiQmVhcmVyICR7QXV0aFRva2VufSINCiAgICAgICAgICAgICAgICAiWC1HaXRIdWItQXBp
+LVZlcnNpb24iID0gIjIwMjItMTEtMjgiDQogICAgICAgICAgICB9DQogICAgICAgICkNCiAgICB9DQog
+ICAgV3JpdGUtVmVyYm9zZSAiUmVzdE1ldGhvZF9QYXJhbWV0ZXJzOmBuJCgkUmVzdE1ldGhvZF9QYXJh
+bWV0ZXJzIHwgQ29udmVydFRvLUpzb24gfCBPdXQtU3RyaW5nKSINCiAgICAkQ29udGVudCA9IEludm9r
+ZS1SZXN0TWV0aG9kIEBSZXN0TWV0aG9kX1BhcmFtZXRlcnMNCiAgICBJZiAoJFB1YmxpYykNCiAgICB7
+DQogICAgICAgIHJldHVybiAkQ29udGVudA0KICAgIH0NCiAgICBFbHNlDQogICAgew0KICAgICAgICBy
+ZXR1cm4gW1N5c3RlbS5UZXh0LkVuY29kaW5nXTo6VVRGOC5HZXRTdHJpbmcoW0NvbnZlcnRdOjpGcm9t
+QmFzZTY0U3RyaW5nKCgkQ29udGVudC5jb250ZW50KSkpDQogICAgfQ0K
+"
 
-$Content_Parameters = {
-    Param
-    (
-        [Parameter(Position=0)]$Account,
-        [Parameter(Position=1)]$repo,
-        [Parameter(Position=2)]$file
-    )
-    Add-Type -AssemblyName System.Web
-    @{
-        Method = 'Get'
-        URI = [System.Web.HttpUtility]::UrlPathEncode("https://api.github.com/repos/${Account}/${repo}/contents/${file}")
-        Header = @{
-            Accept = "application/vnd.github+json"
-            Authorization = "Bearer ${GitHubAuthToken}"
-            "X-GitHub-Api-Version" = "2022-11-28"
-        }
-    }
-}
+$Function = $(
+    "Function Get-GitHubContents"
+    "{"
+    [system.text.encoding]::utf8.GetString([Convert]::FromBase64String($Base64))
+    "}"
+)
 
-$parameters = &$Content_Parameters $Account $Repo $ScriptPath
-$Content = [scriptblock]::Create(($enc.GetString([Convert]::FromBase64String((Invoke-RestMethod @parameters).content))))
+Invoke-Command -ScriptBlock ([scriptblock]::Create($Function)) -NoNewScope
 
-<# Public Repo
-$Content = Invoke-RestMethod `
-    -Method Get `
-    -Uri "https://raw.githubusercontent.com/${Account}/${Repo}/main/${ScriptPath}" `
-    -UseBasicParsing
-#>
+$Content = Get-GitHubContents $Account $Repo $ScriptPath $GitHubAuthToken
 
 Invoke-Command -ScriptBlock $([scriptblock]::Create($Content)) -NoNewScope
