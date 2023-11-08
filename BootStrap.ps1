@@ -73,6 +73,7 @@ $Function = $(
 
 Invoke-Command -ScriptBlock ([scriptblock]::Create($Function)) -NoNewScope
 
+# Pull down MasterBuiltScript.ps1
 $Content = Get-GitHubContents $Account $Repo $ScriptPath $GitHubAuthToken
 
 Invoke-Command -ScriptBlock $([scriptblock]::Create($Content)) -NoNewScope
