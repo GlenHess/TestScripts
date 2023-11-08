@@ -47,10 +47,10 @@ Function Get-GitHubContents
         [Parameter(Mandatory, ParameterSetName = 'Private', Position = 2)]
         [string]$FilePath,
 
-        [Parameter(Mandatory, ParameterSetName = 'Private', Position = 3)]
+        [Parameter(ParameterSetName = 'Private', Position = 3)]
         [string]$AuthToken
     )
-    If (-not $AuthToken) {
+    If ([string]::IsNullOrWhiteSpace($AuthToken)) {
         Write-Verbose "Parameter Set: Public"
         $Public = $true
     }
@@ -95,3 +95,4 @@ Function Get-GitHubContents
         return [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String(($Content.content)))
     }
 }
+
