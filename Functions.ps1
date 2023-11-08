@@ -31,25 +31,67 @@ Function Get-GeoId($Name='*')
     }
 }
 
-Function Get-GitHubContents()
+Function Get-GitHubContents
 {
-    Param(
-        [Parameter(Position=0)]$Account,
-        [Parameter(Position=1)]$Repo,
-        [Parameter(Position=2)]$ScriptPath
+    [CmdletBinding(DefaultParameterSetName = 'Public')]
+    Param (
+        [Parameter(Mandatory, ParameterSetName = 'Public', Position = 0)]
+        [Parameter(Mandatory, ParameterSetName = 'Private', Position = 0)]
+        [string]$Account,
+
+        [Parameter(Mandatory, ParameterSetName = 'Public', Position = 1)]
+        [Parameter(Mandatory, ParameterSetName = 'Private', Position = 1)]
+        [string]$Repo,
+
+        [Parameter(Mandatory, ParameterSetName = 'Public', Position = 2)]
+        [Parameter(Mandatory, ParameterSetName = 'Private', Position = 2)]
+        [string]$FilePath,
+
+        [Parameter(Mandatory, ParameterSetName = 'Private', Position = 3)]
+        [string]$AuthToken
     )
-    <#
-        This function returns the raw content from github
-    #>
-    
-    $enc.GetString([Convert]::FromBase64String((Invoke-RestMethod `
-        -Method Get `
-        -URI [System.Web.HttpUtility]::UrlPathEncode("https://api.github.com/repos/${Account}/${repo}/contents/${ScriptPath}") `
-        -UseBasicParsing `
-        -Header @{
-            Accept = "application/vnd.github+json"
-            Authorization = "Bearer ${GitHubAuthToken}"
-            "X-GitHub-Api-Version" = "2022-11-28"
-        }
-    ))
+    If (-not $AuthToken) {
+        Write-Verbose "Parameter Set: Public"
+        $Public = $true
+    }
+    else
+    {
+        Write-Verbose "Parameter Set: Private"
+    }
+    Add-Type -AssemblyName System.Web
+    $RestMethod_Parameters = @{}
+    $RestMethod_Parameters.Add('Method','Get')
+    $RestMethod_Parameters.Add('UseBasicParsing',$true)
+    If ($Public)
+    {
+        $RestMethod_Parameters.Add(
+            'URI',
+            [System.Web.HttpUtility]::UrlPathEncode("https://raw.githubusercontent.com/${Account}/${Repo}/main/${FilePath}")
+        )
+    }
+    Else # Private
+    {
+        $RestMethod_Parameters.Add(
+            'URI',
+            [System.Web.HttpUtility]::UrlPathEncode("https://api.github.com/repos/${Account}/${Repo}/contents/${FilePath}")
+        )
+        $RestMethod_Parameters.Add(
+            'Header',
+            @{
+                Accept = "application/vnd.github+json"
+                Authorization = "Bearer ${AuthToken}"
+                "X-GitHub-Api-Version" = "2022-11-28"
+            }
+        )
+    }
+    Write-Verbose "RestMethod_Parameters:`n$($RestMethod_Parameters | ConvertTo-Json | Out-String)"
+    $Content = Invoke-RestMethod @RestMethod_Parameters
+    If ($Public)
+    {
+        return $Content
+    }
+    Else
+    {
+        return [System.Text.Encoding]::UTF8.GetString([Convert]::FromBase64String(($Content.content)))
+    }
 }
