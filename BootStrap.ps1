@@ -1,7 +1,7 @@
 $Account = "<Enter GitHub Account name>"
 $Repo = "<Enter GitHub Repository name>"
-$ScriptPath = "<Enter GitHub Script Path>"
-$GitHubAuthToken = "<Enter GitHub Auth Token>"
+$ScriptPath = "MasterBuildScript.ps1"
+$GitHubAuthToken = "<Enter GitHub Auth Token>" # Delete if using Public Repo
 
 $LanguageRegionCode = '@lab.LanguageRegionCode'
 
